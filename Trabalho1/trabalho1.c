@@ -11,10 +11,10 @@
 //  O aluno deve preencher seus dados abaixo, e implementar as questões do trabalho
 
 //  ----- Dados do Aluno -----
-//  Nome:
-//  email:
-//  Matrícula:
-//  Semestre:
+//  Nome: Wheston Junio Ramos Cunha
+//  email: wheston.ramos@gmail.com
+//  Matrícula: 20232160029
+//  Semestre: 4º
 
 //  Copyright © 2016 Renato Novais. All rights reserved.
 // Última atualização: 07/05/2021 - 19/08/2016
@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include "trabalho1.h" // Substitua pelo seu arquivo de header renomeado
 #include <stdlib.h>
+#include <string.h>
 
 DataQuebrada quebraData(char data[]);
 
@@ -157,9 +158,27 @@ DiasMesesAnos q2(char datainicial[], char datafinal[])
  @saida
     Um número n >= 0.
  */
+
+int searchChar (char texto[], char c, int isCaseSensitive) {
+    int quantity = 0;
+
+    if (isCaseSensitive == 1) {
+      for (int i = 0; texto[i] != '\0'; i++) {
+        if (texto[i] == c) quantity++;
+      }
+    } else if (isCaseSensitive == 0) {
+      for (int i = 0; texto[i] != '\0'; i++) {
+        if (texto[i] == c || texto[i] == c - 32) quantity++;
+      }
+    }
+    return quantity;
+}
+
 int q3(char *texto, char c, int isCaseSensitive)
 {
     int qtdOcorrencias = -1;
+
+    qtdOcorrencias = searchChar (texto, c, isCaseSensitive);
 
     return qtdOcorrencias;
 }
@@ -179,9 +198,45 @@ int q3(char *texto, char c, int isCaseSensitive)
         O retorno da função, n, nesse caso seria 1;
 
  */
+
+int searchString (char *strTexto, char *strBusca, int posicoes[30]) {
+  int inicial = 0;
+  int final = 1;
+  int acento = 0;
+  int contador = 0;
+    int temacento=0;
+
+  for (int i = 0; strTexto[i] != '\0'; i++) {
+
+    if (strTexto[i] == -61)
+     acento++; // -61 é o codigo de acento
+
+    if (strTexto[i] == strBusca[0]) {
+      int posicaoI = i;
+      int found = 1;
+      int j = 1;
+      for (; strBusca[j] != '\0'; j++) {
+
+        if (strTexto[i+j] != strBusca[j]) {
+          found = 0;
+          break;
+        }
+      }
+      if (found) {
+        posicoes[inicial] = (posicaoI + 1) - acento;
+        posicoes[final] = (i + j) - acento;
+        contador++;
+        inicial += 2;
+        final += 2;
+      }
+    }
+  }
+  return contador;
+}
+
 int q4(char *strTexto, char *strBusca, int posicoes[30])
 {
-    int qtdOcorrencias = -1;
+    int qtdOcorrencias = searchString (strTexto, strBusca, posicoes);
 
     return qtdOcorrencias;
 }
@@ -198,8 +253,14 @@ int q4(char *strTexto, char *strBusca, int posicoes[30])
 
 int q5(int num)
 {
+  int inv=0;
 
-    return num;
+  while(num>0){
+    inv = inv*10+num%10;
+    num = num/10;  
+  }
+  
+return inv;
 }
 
 /*
@@ -214,7 +275,25 @@ int q5(int num)
 
 int q6(int numerobase, int numerobusca)
 {
-    int qtdOcorrencias;
+  int qtdOcorrencias = 0;
+  int base = numerobase;
+  int busca = numerobusca;
+
+  while (base != 0) {
+      int tempBase = base; 
+      int tempBusca = busca; 
+      
+      while (tempBase != 0 && tempBusca != 0 && tempBase % 10 == tempBusca % 10) {
+          tempBase /= 10;
+          tempBusca /= 10;
+      }
+
+      if (tempBusca == 0) {
+          qtdOcorrencias++;
+      }
+
+  base /= 10;
+  }
     return qtdOcorrencias;
 }
 
